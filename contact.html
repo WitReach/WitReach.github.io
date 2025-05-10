@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Wit Reach</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#0d1117] text-gray-200 min-h-screen">
+    <!-- Top Navigation -->
+    <nav class="w-full bg-[#161b22] border-b border-[#21262d] px-4 py-2 flex items-center justify-between fixed top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <img src="assets/img/logo.png" alt="Wit Reach Logo" class="w-10 h-10 rounded-full border-2 border-[#fea113] bg-[#0d1117]">
+            <span class="text-xl font-bold text-white">Wit Reach</span>
+        </div>
+        <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="hover:text-[#fea113] transition-colors">Overview</a>
+            <a href="contact.html" class="hover:text-[#fea113] transition-colors">Contact</a>
+            <a href="https://blog.witreach.com" target="_blank" class="hover:text-[#fea113] transition-colors">Blog</a>
+        </div>
+        <button class="md:hidden mobile-menu-button text-2xl text-gray-300"><i class="fas fa-bars"></i></button>
+    </nav>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu hidden md:hidden bg-[#161b22] border-b border-[#21262d] px-4 pt-16 pb-4 fixed w-full z-40">
+        <a href="index.html" class="block py-2 px-2 hover:bg-[#21262d] rounded">Overview</a>
+        <a href="contact.html" class="block py-2 px-2 hover:bg-[#21262d] rounded">Contact</a>
+        <a href="https://blog.witreach.com" target="_blank" class="block py-2 px-2 hover:bg-[#21262d] rounded">Blog</a>
+    </div>
+    <div class="flex pt-20 max-w-7xl mx-auto w-full">
+        <!-- Sidebar (desktop) -->
+        <aside class="hidden md:block w-64 flex-shrink-0 pr-6 border-r border-[#21262d] min-h-[calc(100vh-5rem)]">
+            <div class="flex flex-col items-center mt-8">
+                <img src="assets/img/logo.png" alt="Wit Reach Logo" class="w-24 h-24 rounded-full border-4 border-[#fea113] bg-[#0d1117] mb-4">
+                <h2 class="text-2xl font-bold text-white mb-2">Wit Reach</h2>
+                <p class="text-gray-400 text-center mb-4">Empowering developers and educators with innovative solutions.</p>
+                <div class="flex space-x-3 mb-4">
+                    <a href="https://github.com/WitReach" target="_blank" class="hover:text-[#fea113]"><i class="fab fa-github text-xl"></i></a>
+                    <a href="https://linkedin.com/company/wit-reach" target="_blank" class="hover:text-[#fea113]"><i class="fab fa-linkedin text-xl"></i></a>
+                    <a href="https://twitter.com/wit_reach" target="_blank" class="hover:text-[#fea113]"><i class="fab fa-x-twitter text-xl"></i></a>
+                </div>
+                <a href="https://witreach.freshdesk.com/" target="_blank" class="w-full text-center bg-[#fea113] text-[#0d1117] font-semibold py-2 rounded hover:bg-[#e08a00] transition mb-2">Support</a>
+            </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 px-4 md:px-12 py-8">
+            <!-- Contact Card -->
+            <div class="bg-[#161b22] border border-[#21262d] rounded-xl p-6 mb-8 flex flex-col md:flex-row md:items-center md:space-x-8">
+                <img src="assets/img/logo.png" alt="Wit Reach Logo" class="w-20 h-20 rounded-full border-2 border-[#fea113] bg-[#0d1117] mb-4 md:mb-0">
+                <div>
+                    <h1 class="text-3xl font-bold text-white mb-2">Contact</h1>
+                    <p class="text-gray-400 mb-2">Have questions or want to collaborate? We'd love to hear from you.</p>
+                    <div class="flex flex-col space-y-2 mt-4">
+                        <div class="flex items-center text-gray-400"><i class="fas fa-envelope mr-2"></i> support@witreach.com</div>
+                        <div class="flex items-center text-gray-400"><i class="fas fa-globe mr-2"></i> www.witreach.com</div>
+                        <div class="flex items-center text-gray-400"><i class="fas fa-map-marker-alt mr-2"></i> India</div>
+                    </div>
+                    <div class="mt-6">
+                        <a href="https://witreach.freshdesk.com/" target="_blank" class="inline-block bg-[#fea113] text-[#0d1117] font-semibold py-2 px-6 rounded hover:bg-[#e08a00] transition">Visit Support Portal</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Optionally, add more contact/support info here -->
+        </main>
+    </div>
+    <footer class="w-full text-center py-6 text-gray-500 text-sm border-t border-[#21262d] bg-[#161b22] mt-8">
+        &copy; 2024 Wit Reach. All rights reserved.
+    </footer>
+    <script src="main.js"></script>
+</body>
+</html> 

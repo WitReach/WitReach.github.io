@@ -1,74 +1,94 @@
 <!DOCTYPE html>
-<html data-bs-theme="light" lang="en">
-
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Wit Reach GitHub Repo</title>
-    <meta name="theme-color" content="#fffbe8">
-    <meta name="twitter:title" content="Wit Reach GitHub Repo">
-    <meta name="twitter:image" content="assets/img/Logo%20Icon%20Circle.png">
-    <meta property="og:image" content="assets/img/Logo%20Icon%20Circle.png">
-    <meta name="twitter:description" content="WitReach will offer you some packages and resources ready to use for learning and personal user completely free of cost!">
-    <meta name="description" content="WitReach will offer you some packages and resources ready to use for learning and personal user completely free of cost!">
-    <link rel="icon" type="image/png" sizes="1866x1866" href="assets/img/Logo%20Icon%20Circle.png">
-    <link rel="icon" type="image/png" sizes="1866x1866" href="assets/img/Logo%20Icon%20Circle.png" media="(prefers-color-scheme: dark)">
-    <link rel="icon" type="image/png" sizes="1866x1866" href="assets/img/Logo%20Icon%20Circle.png">
-    <link rel="icon" type="image/png" sizes="1866x1866" href="assets/img/Logo%20Icon%20Circle.png" media="(prefers-color-scheme: dark)">
-    <link rel="icon" type="image/png" sizes="1866x1866" href="assets/img/Logo%20Icon%20Circle.png">
-    <link rel="icon" type="image/png" sizes="1866x1866" href="assets/img/Logo%20Icon%20Circle.png">
-    <link rel="icon" type="image/png" sizes="1866x1866" href="assets/img/Logo%20Icon%20Circle.png">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic&amp;display=swap">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wit Reach - Keet EdTech and Tech Solution Pvt Ltd</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
-
-<body id="page-top">
-    <nav class="navbar navbar-expand" id="sidebar-wrapper">
-        <div class="container"><button data-bs-toggle="collapse" class="navbar-toggler d-none" data-bs-target="#"></button>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav sidebar-nav" id="sidebar-nav">
-                    <li class="nav-item sidebar-brand"><a class="nav-link active" href="#page-top">Brand</a></li>
-                    <li class="nav-item sidebar-nav-item"><a class="nav-link" href="#page-top">Home</a></li>
-                    <li class="nav-item sidebar-nav-item"><a class="nav-link" href="#about">About</a></li>
-                    <li class="nav-item sidebar-nav-item"><a class="nav-link" href="#services">Services</a></li>
-                    <li class="nav-item sidebar-nav-item"><a class="nav-link" href="#portfolio">Portfolio</a></li>
-                    <li class="nav-item sidebar-nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                </ul>
-            </div>
+<body class="bg-[#0d1117] text-gray-200 min-h-screen">
+    <!-- Top Navigation -->
+    <nav class="w-full bg-[#161b22] border-b border-[#21262d] px-4 py-2 flex items-center justify-between fixed top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <img src="assets/img/logo.png" alt="Wit Reach Logo" class="w-10 h-10 rounded-full border-2 border-[#fea113] bg-[#0d1117]">
+            <span class="text-xl font-bold text-white">Wit Reach</span>
         </div>
+        <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="hover:text-[#fea113] transition-colors">Overview</a>
+            <a href="contact.html" class="hover:text-[#fea113] transition-colors">Contact</a>
+            <a href="https://blog.witreach.com" target="_blank" class="hover:text-[#fea113] transition-colors">Blog</a>
+        </div>
+        <button class="md:hidden mobile-menu-button text-2xl text-gray-300"><i class="fas fa-bars"></i></button>
     </nav>
-    <header class="d-flex masthead" style="background-image:url('assets/img/bg-masthead.jpg');">
-        <div class="container my-auto text-center">
-            <h1 class="mb-1">Wit Reach</h1>
-            <h3 class="mb-5"><em>GitHub Repository Coming Soon</em></h3>
-        </div>
-    </header>
-    <section id="about" class="content-section bg-light">
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <h2>Coming up with packages and resources for learning and personal use!</h2>
-                    <p class="lead mb-5"><span>WitReach will offer you some packages and resources ready to use for learning and personal user completely free of cost!</span></p><a class="btn btn-dark btn-xl" role="button" href="https://witreach.com">Coming Soon!</a>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu hidden md:hidden bg-[#161b22] border-b border-[#21262d] px-4 pt-16 pb-4 fixed w-full z-40">
+        <a href="index.html" class="block py-2 px-2 hover:bg-[#21262d] rounded">Overview</a>
+        <a href="contact.html" class="block py-2 px-2 hover:bg-[#21262d] rounded">Contact</a>
+        <a href="https://blog.witreach.com" target="_blank" class="block py-2 px-2 hover:bg-[#21262d] rounded">Blog</a>
+    </div>
+    <div class="flex pt-20 max-w-7xl mx-auto w-full">
+        <!-- Sidebar (desktop) -->
+        <aside class="hidden md:block w-64 flex-shrink-0 pr-6 border-r border-[#21262d] min-h-[calc(100vh-5rem)]">
+            <div class="flex flex-col items-center mt-8">
+                <img src="assets/img/logo.png" alt="Wit Reach Logo" class="w-24 h-24 rounded-full border-4 border-[#fea113] mb-4">
+                <h2 class="text-2xl font-bold text-white mb-2">Wit Reach</h2>
+                <p class="text-gray-400 text-center mb-4">Empowering developers and educators with innovative solutions.</p>
+                <div class="flex space-x-3 mb-4">
+                    <a href="https://github.com/WitReach" target="_blank" class="hover:text-[#fea113]"><i class="fab fa-github text-xl"></i></a>
+                    <a href="https://www.linkedin.com/company/wit-reach/" target="_blank" class="hover:text-[#fea113]"><i class="fab fa-linkedin text-xl"></i></a>
+                    <a href="https://www.instagram.com/wit_reach/" target="_blank" class="hover:text-[#fea113]"><i class="fab fa-instagram text-xl"></i></a>
+                    <a href="https://www.youtube.com/@wit_reach" target="_blank" class="hover:text-[#fea113]"><i class="fab fa-youtube text-xl"></i></a>
+                    <a href="https://x.com/wit_reach" target="_blank" class="hover:text-[#fea113]"><i class="fab fa-x-twitter text-xl"></i></a>
+                </div>
+                <a href="https://witreach.freshdesk.com/" target="_blank" class="w-full text-center bg-[#fea113] text-[#0d1117] font-semibold py-2 rounded hover:bg-[#e08a00] transition mb-2">Support</a>
+            </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 px-4 md:px-12 py-8">
+            <!-- Org Card -->
+            <div class="bg-[#161b22] border border-[#21262d] rounded-xl p-6 mb-8 flex flex-col md:flex-row md:items-center md:space-x-8">
+                <img src="assets/img/logo.png" alt="Wit Reach Logo" class="w-20 h-20 rounded-full border-2 border-[#fea113] mb-4 md:mb-0">
+                <div>
+                    <h1 class="text-3xl font-bold text-white mb-2">Wit Reach</h1>
+                    <p class="text-gray-400 mb-2">Keet EdTech and Tech Solution Pvt Ltd</p>
+                    <div class="flex flex-wrap items-center space-x-4 text-sm text-gray-400">
+                        <span><i class="fas fa-map-marker-alt mr-1"></i> India</span>
+                        <a href="http://witreach.com" class="hover:text-[#fea113]" target="_blank"><i class="fas fa-link mr-1"></i> witreach.com</a>
+                        <a href="https://github.com/WitReach" class="hover:text-[#fea113]" target="_blank"><i class="fab fa-github mr-1"></i> GitHub</a>
+                        <a href="https://www.linkedin.com/company/wit-reach/" class="hover:text-[#fea113]" target="_blank"><i class="fab fa-linkedin mr-1"></i> LinkedIn</a>
+                        <a href="https://www.instagram.com/wit_reach/" class="hover:text-[#fea113]" target="_blank"><i class="fab fa-instagram mr-1"></i> Instagram</a>
+                        <a href="https://www.youtube.com/@wit_reach" class="hover:text-[#fea113]" target="_blank"><i class="fab fa-youtube mr-1"></i> YouTube</a>
+                        <a href="https://x.com/wit_reach" class="hover:text-[#fea113]" target="_blank"><i class="fab fa-x-twitter mr-1"></i> X</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <footer class="footer text-center">
-        <div class="container">
-            <ul class="list-inline mb-5">
-                <li class="list-inline-item">&nbsp;<a class="link-light social-link rounded-circle" href="facebook.com/profile.php?id=61559003457373" target="_blank"><i class="icon-social-facebook"></i></a></li>
-                <li class="list-inline-item">&nbsp;<a class="link-light social-link rounded-circle" href="x.com/wit_reach" target="_blank"><i class="icon-social-twitter"></i></a></li>
-                <li class="list-inline-item">&nbsp;<a class="link-light social-link rounded-circle" href="instagram.com/wit_reach"><i class="icon-social-instagram"></i></a></li>
-                <li class="list-inline-item">&nbsp;<a class="link-light social-link rounded-circle" href="in.linkedin.com/company/wit-reach"><i class="icon-social-linkedin"></i></a></li>
-            </ul>
-            <p class="text-muted mb-0 small">Copyright &nbsp;© Wit Reach 2024</p>
-        </div><a class="scroll-to-top rounded" href="#page-top"><i class="fa fa-angle-up"></i></a>
+            <!-- Projects Grid -->
+            <div>
+                <h2 class="text-xl font-semibold text-white mb-4">Popular Projects</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Example Project Card -->
+                    <div class="bg-[#161b22] border border-[#21262d] rounded-lg p-5 flex flex-col hover:border-[#fea113] transition card-hover">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-code-branch text-[#fea113] text-xl mr-2"></i>
+                            <span class="font-semibold text-white">witreach.github.io</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-3">Wit Reach's main website and open-source showcase.</p>
+                        <div class="flex items-center text-xs text-gray-500 space-x-4">
+                            <span><i class="fas fa-star mr-1"></i>0</span>
+                            <span><i class="fas fa-code text-[#fea113] mr-1"></i>HTML</span>
+                            <span><i class="fas fa-clock mr-1"></i>Updated Oct 29, 2024</span>
+                        </div>
+                    </div>
+                    <!-- Add more project cards as needed -->
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer class="w-full text-center py-6 text-gray-500 text-sm border-t border-[#21262d] bg-[#161b22] mt-8">
+        &copy; 2024 Wit Reach. All rights reserved.
     </footer>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/stylish-portfolio.js"></script>
+    <script src="main.js"></script>
 </body>
-
 </html>
