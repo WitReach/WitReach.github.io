@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teleprompter</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter and Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              500: '#8b5cf6', // Violet
+              600: '#7c3aed',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0f172a; /* tailwind slate-900 */
+      color: #f8fafc; /* tailwind slate-50 */
+      overflow: hidden; /* Hide main body scroll, handle scroll in container */
+    }
+    
+    .mirror-y {
+      transform: scaleY(-1);
+    }
+    .mirror-x {
+      transform: scaleX(-1);
+    }
+    .mirror-both {
+      transform: scaleX(-1) scaleY(-1);
+    }
+
+    #prompter-container {
+      /* Hide standard scrollbar for clean UI */
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+    #prompter-container::-webkit-scrollbar {
+      display: none; /* Chrome, Safari and Opera */
+    }
+
+    .glass-panel {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Range slider custom styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #8b5cf6;
+      cursor: pointer;
+      margin-top: -6px;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      cursor: pointer;
+      background: #334155;
+      border-radius: 2px;
+    }
+    
+    .fade-enter { opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+    .fade-enter-active { opacity: 1; transform: translateY(0); }
+    .fade-exit { opacity: 1; transform: translateY(0); transition: all 0.3s ease; }
+    .fade-exit-active { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+  </style>
+</head>
+<body class="h-screen w-screen relative font-sans antialiased text-slate-100 flex flex-col">
+
+  <!-- ======================== -->
+  <!-- TELEPROMPTER VIEW        -->
+  <!-- ======================== -->
+  <div id="view-prompter" class="w-full h-full absolute inset-0 z-0 flex flex-col items-center">
+    
+    <!-- Focus Indicator Line (Middle of screen) -->
+    <div id="focus-line" class="absolute top-1/2 left-0 w-full h-px bg-brand-500/30 z-10 pointer-events-none shadow-[0_0_15px_rgba(139,92,246,0.3)]"></div>
+    <div id="focus-arrows" class="absolute top-1/2 left-4 -translate-y-1/2 text-brand-500/50 z-10 pointer-events-none">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </div>
+
+    <!-- Scroll Container -->
+    <!-- We apply the mirror class to the container that holds the text -->
+    <div id="prompter-container" class="w-full h-full overflow-y-auto px-4 md:px-12 relative z-0 mirror-y">
+      <!-- padding to allow first line to start at middle -->
+      <div id="padding-top" style="height: 50vh;"></div>
+      
+      <!-- Text content -->
+      <div id="prompter-text" class="w-full max-w-4xl mx-auto text-6xl font-display font-semibold leading-relaxed text-center" style="margin-left: auto; margin-right: auto; width: 100%;">
+        Hello how are you
+      </div>
+
+      <!-- padding to allow last line to scroll past middle -->
+      <div id="padding-bottom" style="height: 50vh;"></div>
+    </div>
+  </div>
+
+
+  <!-- ======================== -->
+  <!-- EDIT MODE VIEW           -->
+  <!-- ======================== -->
+  <div id="view-editor" class="w-full h-full absolute inset-0 z-20 bg-slate-900 hidden flex flex-col p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-display font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-500 to-indigo-400">Edit Script</h2>
+      <button id="btn-save-script" class="px-6 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-full font-semibold transition-all shadow-[0_0_15px_rgba(124,58,237,0.4)]">
+        Save & Return
+      </button>
+    </div>
+    <textarea id="script-textarea" class="flex-1 w-full bg-slate-800/50 border border-slate-700 rounded-xl p-6 text-xl text-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none font-sans" placeholder="Paste your script here..."></textarea>
+  </div>
+
+
+  <!-- ======================== -->
+  <!-- FLOATING SETTINGS HUD    -->
+  <!-- ======================== -->
+  <div id="settings-hud" class="absolute top-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-3xl px-4 transition-all duration-300">
+    <div class="glass-panel p-6 rounded-2xl shadow-2xl flex flex-col gap-6">
+      
+      <!-- Top Row Controls -->
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex gap-2">
+          <button id="btn-edit" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 transition-colors tooltip group relative">
+            <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-slate-800 px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">Edit Script</span>
+          </button>
+          
+          <button id="btn-mirror" class="p-2.5 rounded-lg bg-brand-600/30 hover:bg-brand-600/50 text-brand-300 border border-brand-500/50 transition-colors tooltip flex gap-2 items-center text-sm font-semibold group relative">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
+            <span id="mirror-label">Mirror: Y</span>
+            <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-slate-800 px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap text-white font-normal">Toggle Mirroring</span>
+          </button>
+        </div>
+
+        <button id="btn-play-pause" class="w-14 h-14 rounded-full bg-brand-600 hover:bg-brand-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(124,58,237,0.5)] transition-transform hover:scale-105 active:scale-95">
+          <!-- Play Icon -->
+          <svg id="icon-play" class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <!-- Pause Icon (hidden by default) -->
+          <svg id="icon-pause" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+
+      </div>
+
+      <!-- Sliders Row -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Speed -->
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-slate-400 font-medium tracking-wide">SPEED</span>
+            <span id="label-speed" class="font-mono text-brand-400">2.0</span>
+          </div>
+          <input type="range" id="slider-speed" min="0.5" max="10" step="0.1" value="2.0">
+        </div>
+
+        <!-- Font Size -->
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-slate-400 font-medium tracking-wide">SIZE</span>
+            <span id="label-font" class="font-mono text-brand-400">60px</span>
+          </div>
+          <input type="range" id="slider-font" min="20" max="150" step="2" value="60">
+        </div>
+
+        <!-- Margins -->
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-slate-400 font-medium tracking-wide">MARGINS</span>
+            <span id="label-margin" class="font-mono text-brand-400">100%</span>
+          </div>
+          <input type="range" id="slider-margin" min="20" max="100" step="5" value="100">
+        </div>
+
+      </div>
+
+      <!-- Status Footer -->
+      <div class="text-center text-xs text-slate-500 font-medium tracking-widest uppercase mt-2">
+        <span class="inline-block px-2 py-1 rounded bg-slate-800">Space ⎵ Play/Pause</span>
+        <span class="inline-block px-2 py-1 rounded bg-slate-800 ml-2">↑ ↓ Speed</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // --- State ---
+    let isPlaying = false;
+    let autoScrollSpeed = 2.0; // pixels per frame
+    let fontSize = 60;
+    let textWidthPercent = 100;
+    
+    // Default mirror mode: we start with 'Vertical' flip per user request.
+    const mirrorModes = ['none', 'mirror-y', 'mirror-x', 'mirror-both'];
+    const mirrorLabels = ['Normal', 'Mirror: Y', 'Mirror: X', 'Both'];
+    let currentMirrorIndex = 1;
+
+    let defaultScript = `Hello how are you\n\nWelcome to your new teleprompter!\n\nYou can use your presenter remote to scroll up and down, or hit the spacebar to play or pause the auto-scroll.\n\nAdjust the margins, font size, and speed using the floating settings panel above.\n\nThe text is mirrored exactly as you specified so it will look perfect on your teleprompter reflection.\n\nEnjoy presenting!`;
+
+    // --- DOM Elements ---
+    const dom = {
+      prompterContainer: document.getElementById('prompter-container'),
+      prompterText: document.getElementById('prompter-text'),
+      scriptTextarea: document.getElementById('script-textarea'),
+      
+      viewPrompter: document.getElementById('view-prompter'),
+      viewEditor: document.getElementById('view-editor'),
+      settingsHud: document.getElementById('settings-hud'),
+      
+      btnEdit: document.getElementById('btn-edit'),
+      btnSave: document.getElementById('btn-save-script'),
+      btnPlayPause: document.getElementById('btn-play-pause'),
+      btnMirror: document.getElementById('btn-mirror'),
+      
+      iconPlay: document.getElementById('icon-play'),
+      iconPause: document.getElementById('icon-pause'),
+      mirrorLabel: document.getElementById('mirror-label'),
+      
+      sliderSpeed: document.getElementById('slider-speed'),
+      sliderFont: document.getElementById('slider-font'),
+      sliderMargin: document.getElementById('slider-margin'),
+      
+      labelSpeed: document.getElementById('label-speed'),
+      labelFont: document.getElementById('label-font'),
+      labelMargin: document.getElementById('label-margin'),
+    };
+
+    // --- Initialization ---
+    function init() {
+      // Set initial script
+      setText(defaultScript);
+      dom.scriptTextarea.value = defaultScript;
+      
+      // Setup event listeners
+      dom.btnPlayPause.addEventListener('click', togglePlay);
+      dom.btnEdit.addEventListener('click', openEditor);
+      dom.btnSave.addEventListener('click', saveEditor);
+      dom.btnMirror.addEventListener('click', cycleMirror);
+      
+      dom.sliderSpeed.addEventListener('input', (e) => setSpeed(parseFloat(e.target.value)));
+      dom.sliderFont.addEventListener('input', (e) => setFont(parseInt(e.target.value)));
+      dom.sliderMargin.addEventListener('input', (e) => setMargin(parseInt(e.target.value)));
+
+      // Keyboard support for presentation remote
+      window.addEventListener('keydown', handleKeydown);
+
+      // Mouse movements wake up HUD
+      window.addEventListener('mousemove', wakeHud);
+      window.addEventListener('click', wakeHud);
+      
+      // Start loop
+      requestAnimationFrame(scrollLoop);
+      
+      // Initial sleep interval
+      hudSleepTimer = setTimeout(sleepHud, 3000);
+    }
+
+    // --- Core Logic ---
+    let lastTime = 0;
+    
+    function scrollLoop(timestamp) {
+      if (!lastTime) lastTime = timestamp;
+      const dt = timestamp - lastTime;
+      lastTime = timestamp;
+
+      if (isPlaying) {
+        // We calculate scroll amount based on time passed to maintain smooth speed regardless of framerate
+        // Baseline: 60fps = ~16.6ms per frame. 
+        // 1 unit of scrollSpeed = 1 pixel per 16.6ms.
+        const scrollDelta = autoScrollSpeed * (dt / 16.6);
+        
+        // standard scroll direction works for all modes since CSS transform is purely visual
+        dom.prompterContainer.scrollTop += scrollDelta;
+      }
+      
+      requestAnimationFrame(scrollLoop);
+    }
+
+    // --- HUD Auto-Hide ---
+    let hudSleepTimer = null;
+    function wakeHud() {
+      dom.settingsHud.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+      dom.settingsHud.classList.add('opacity-100', 'translate-y-0');
+      
+      if (hudSleepTimer) clearTimeout(hudSleepTimer);
+      
+      // Only hide automatically if playing
+      if (isPlaying) {
+        hudSleepTimer = setTimeout(sleepHud, 2500);
+      }
+    }
+    
+    function sleepHud() {
+      // Don't sleep if hovered over
+      if (dom.settingsHud.matches(':hover') || !isPlaying) return;
+      
+      dom.settingsHud.classList.remove('opacity-100', 'translate-y-0');
+      dom.settingsHud.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+    }
+
+    // --- Keyboard Bindings ---
+    function handleKeydown(e) {
+      // Ignore if editing
+      if (!dom.viewEditor.classList.contains('hidden')) return;
+
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlay();
+      } else if (e.code === 'ArrowUp') {
+        e.preventDefault();
+        setSpeed(Math.min(10, autoScrollSpeed + 0.5));
+        dom.sliderSpeed.value = autoScrollSpeed;
+      } else if (e.code === 'ArrowDown') {
+        e.preventDefault();
+        setSpeed(Math.max(0.5, autoScrollSpeed - 0.5));
+        dom.sliderSpeed.value = autoScrollSpeed;
+      } else if (e.code === 'Escape') {
+        e.preventDefault();
+        setPlay(false);
+        openEditor();
+      }
+    }
+
+    // --- Actions ---
+    function setText(text) {
+      // Convert newlines to breaks
+      const formatted = text.replace(/\\n/g, '<br>');
+      dom.prompterText.innerHTML = formatted;
+      // Reset scroll position to top
+      dom.prompterContainer.scrollTop = 0;
+    }
+
+    function togglePlay() {
+      setPlay(!isPlaying);
+    }
+
+    function setPlay(play) {
+      isPlaying = play;
+      if (isPlaying) {
+        dom.iconPlay.classList.add('hidden');
+        dom.iconPause.classList.remove('hidden');
+        sleepHud(); // Try scheduling hud sleep
+      } else {
+        dom.iconPlay.classList.remove('hidden');
+        dom.iconPause.classList.add('hidden');
+        wakeHud(); // Keep hud awake while paused
+      }
+    }
+
+    function openEditor() {
+      setPlay(false);
+      dom.viewEditor.classList.remove('hidden');
+      dom.scriptTextarea.focus();
+    }
+
+    function saveEditor() {
+      setText(dom.scriptTextarea.value);
+      dom.viewEditor.classList.add('hidden');
+    }
+
+    function setSpeed(v) {
+      autoScrollSpeed = v;
+      dom.labelSpeed.innerText = v.toFixed(1);
+      wakeHud();
+    }
+
+    function setFont(v) {
+      fontSize = v;
+      dom.prompterText.style.fontSize = v + 'px';
+      dom.labelFont.innerText = v + 'px';
+    }
+
+    function setMargin(v) {
+      textWidthPercent = v;
+      dom.prompterText.style.width = v + '%';
+      dom.labelMargin.innerText = v + '%';
+    }
+
+    function cycleMirror() {
+      // remove old class
+      dom.prompterContainer.classList.remove(mirrorModes[currentMirrorIndex]);
+      
+      currentMirrorIndex = (currentMirrorIndex + 1) % mirrorModes.length;
+      
+      // add new class
+      if (mirrorModes[currentMirrorIndex] !== 'none') {
+        dom.prompterContainer.classList.add(mirrorModes[currentMirrorIndex]);
+      }
+      
+      dom.mirrorLabel.innerText = mirrorLabels[currentMirrorIndex];
+      
+      // Fix scroll pos
+      dom.prompterContainer.scrollTop = 0;
+    }
+
+    // --- Boot ---
+    window.onload = init;
+
+  </script>
+</body>
+</html>
