@@ -1,0 +1,53 @@
+body {
+  background-color: #0f172a; /* tailwind slate-900 */
+  color: #f8fafc; /* tailwind slate-50 */
+  overflow: hidden; /* Hide main body scroll, handle scroll in container */
+}
+
+/* Mirror Classes for Teleprompter */
+.mirror-none {
+  transform: none;
+}
+.mirror-y {
+  transform: scaleY(-1);
+}
+.mirror-x {
+  transform: scaleX(-1);
+}
+.mirror-both {
+  transform: scaleX(-1) scaleY(-1);
+}
+
+/* Scroll Container Setup */
+#prompter-container {
+  /* Hide standard scrollbar for clean UI */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+#prompter-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* HUD Glassmorphism Background */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.85); /* Darker slate-900 base */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Transitions for HUD */
+.fade-enter, .fade-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+.fade-enter-active, .fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Smooth transition classes for arbitrary properties */
+.transition-all-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
