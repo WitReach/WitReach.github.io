@@ -22,6 +22,29 @@ let state = {
   scriptText: DEFAULT_SCRIPT
 };
 
+// --- Wake Lock Management ---
+let wakeLock = null;
+
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator && wakeLock === null) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => {
+        wakeLock = null;
+      });
+    }
+  } catch (err) {
+    console.warn(`Wake Lock Error: ${err.name}, ${err.message}`);
+  }
+}
+
+// Re-acquire on visibility change
+document.addEventListener('visibilitychange', () => {
+  if (wakeLock !== null && document.visibilityState === 'visible') {
+    requestWakeLock();
+  }
+});
+
 // --- DOM Cache ---
 let dom = {};
 
@@ -37,6 +60,8 @@ function cacheDom() {
     
     btnEdit: document.getElementById('btn-edit'),
     btnSave: document.getElementById('btn-save-script'),
+    btnClear: document.getElementById('btn-clear-script'),
+    btnPaste: document.getElementById('btn-paste-script'),
     btnPlayPause: document.getElementById('btn-play-pause'),
     btnMirror: document.getElementById('btn-mirror'),
     
@@ -124,6 +149,35 @@ function bindEvents() {
   dom.btnEdit.addEventListener('click', openEditor);
   dom.btnSave.addEventListener('click', saveEditor);
   
+  dom.btnClear.addEventListener('click', () => {
+    dom.scriptTextarea.value = '';
+    state.scriptText = '';
+    saveData('script');
+    dom.scriptTextarea.focus();
+  });
+  
+  dom.btnPaste.addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      const start = dom.scriptTextarea.selectionStart;
+      const end = dom.scriptTextarea.selectionEnd;
+      const currentText = dom.scriptTextarea.value;
+      
+      // Insert text at cursor position or replace selection
+      dom.scriptTextarea.value = currentText.substring(0, start) + text + currentText.substring(end);
+      
+      // Update cursor position
+      const newCursorPos = start + text.length;
+      dom.scriptTextarea.selectionStart = dom.scriptTextarea.selectionEnd = newCursorPos;
+      
+      state.scriptText = dom.scriptTextarea.value;
+      saveData('script');
+      dom.scriptTextarea.focus();
+    } catch (err) {
+      alert("Clipboard access denied. Please use Cmd+V / Ctrl+V to paste.");
+    }
+  });
+  
   // Realtime script saving
   dom.scriptTextarea.addEventListener('input', (e) => {
     state.scriptText = e.target.value;
@@ -207,9 +261,11 @@ function handleKeydown(e) {
   } else if (e.code === 'ArrowUp') {
     e.preventDefault();
     handleDirectionalCommand(1);  // Reversed per user request
+    requestWakeLock(); // Request lock on any directional command
   } else if (e.code === 'ArrowDown') {
     e.preventDefault();
     handleDirectionalCommand(-1); // Reversed per user request
+    requestWakeLock();
   } else if (e.code === 'Escape') {
     e.preventDefault();
     setPlay(false);
@@ -260,6 +316,7 @@ function applySettings(resetScroll = false) {
 }
 
 function togglePlay() {
+  requestWakeLock(); // Ensure screen stays awake when initiating playback
   setPlay(!state.isPlaying);
 }
 

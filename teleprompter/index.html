@@ -13,6 +13,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
   
+  <!-- PWA & Mobile Optimization -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Prompter">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='128' fill='%230f172a'/%3E%3Cpath fill='%23fff' d='M150 150h212v40H276v172h-40V190h-86z'/%3E%3C/svg%3E">
+  
   <!-- External CSS -->
   <link rel="stylesheet" href="style.css">
 
@@ -73,7 +80,17 @@
   <!-- Note: HUD hides when this is open -->
   <div id="view-editor" class="w-full h-full absolute inset-0 z-50 bg-slate-900 hidden flex flex-col p-6">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-3xl font-display font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-indigo-400">Edit Script</h2>
+      <div class="flex items-center gap-3">
+        <h2 class="text-3xl font-display font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-indigo-400 mr-4">Edit Script</h2>
+        <button id="btn-clear-script" class="px-3 py-2 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-lg flex items-center gap-2 transition-colors border border-slate-700/50 hover:border-red-500/50 text-sm font-semibold">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          Clear
+        </button>
+        <button id="btn-paste-script" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 rounded-lg flex items-center gap-2 transition-colors border border-slate-700/50 text-sm font-semibold">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+          Paste
+        </button>
+      </div>
       <button id="btn-save-script" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-500 text-white rounded-full font-semibold transition-all shadow-[0_0_15px_rgba(124,58,237,0.4)]">
         Save & Return
       </button>
@@ -139,6 +156,6 @@
   </div>
 
   <!-- External JS - Version bumped to bust cache -->
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>
